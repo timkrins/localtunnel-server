@@ -75,6 +75,7 @@ export default function(opt) {
             return;
         }
 
+        debug('redirecting');
         // no new client request, send to landing page
         ctx.redirect(landingPage);
     });
@@ -122,18 +123,21 @@ export default function(opt) {
         const hostname = req.headers.host;
         if (!hostname) {
             res.statusCode = 400;
+            debug('host header was required');
             res.end('Host header is required');
             return;
         }
 
         const clientId = GetClientIdFromHostname(hostname);
         if (!clientId) {
+            debug('no clientId');
             appCallback(req, res);
             return;
         }
 
         const client = manager.getClient(clientId);
         if (!client) {
+            debug('no client with id %s', clientId);
             res.statusCode = 404;
             res.end('404');
             return;
